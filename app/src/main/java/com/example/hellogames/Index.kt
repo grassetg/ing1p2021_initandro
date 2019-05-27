@@ -17,6 +17,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
+import kotlin.random.Random
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -38,6 +39,7 @@ class Index : Fragment() {
         return inflater.inflate(R.layout.fragment_index, container, false)
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val image1: ImageView = view.findViewById(R.id.imageGame1)
         val image2: ImageView = view.findViewById(R.id.imageGame2)
@@ -46,11 +48,10 @@ class Index : Fragment() {
 
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://androidlessonsapi.herokuapp.com/api/help/#api-Game-GameList")
+            .baseUrl("https://androidlessonsapi.herokuapp.com/api/")
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
         val service = retrofit.create(WebService::class.java)
-        val call = arrayListOf<Game>()
         val wsCallback: Callback<List<Game>> = object : Callback<List<Game>> {
             override fun onFailure(call: Call<List<Game>>, t: Throwable) {
                 // Code here what happens if calling the WebService fails
@@ -64,10 +65,29 @@ class Index : Fragment() {
                     if (responseData != null) {
                         Log.d("TAG", "WebService success : " + responseData.size)
                     }
+
+                    Log.d("RESULT",responseData.toString())
+                    var image : ImageView = image1
+                    for (i in 1..4) {
+                        if (i == 2)
+                            image = image2
+                        else if (i == 3)
+                            image = image3
+                        else if (i == 4)
+                            image = image4
+                        val game : Game = (responseData as List<Game>).random()
+                        Glide.with(view).load(game.picture).into(image)
+                        image.setOnClickListener{
+                            (activity as MainActivity).onImageClick()
+                        }
+                    }
+
                 }
             }
         }
 
         service.listGames().enqueue(wsCallback)
     }
+
+
 }
