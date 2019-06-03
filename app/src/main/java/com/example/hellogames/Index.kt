@@ -15,9 +15,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Query
-import kotlin.random.Random
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -45,17 +42,19 @@ class Index : Fragment() {
         val image2: ImageView = view.findViewById(R.id.imageGame2)
         val image3: ImageView = view.findViewById(R.id.imageGame3)
         val image4: ImageView = view.findViewById(R.id.imageGame4)
+        var list = mutableListOf<Game>()
+        var game : Game
 
 
         val retrofit = Retrofit.Builder()
             .baseUrl("https://androidlessonsapi.herokuapp.com/api/")
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
-        val service = retrofit.create(WebService::class.java)
+        val service = retrofit.create(WebServiceInterface::class.java)
         val wsCallback: Callback<List<Game>> = object : Callback<List<Game>> {
             override fun onFailure(call: Call<List<Game>>, t: Throwable) {
-                // Code here what happens if calling the WebService fails
-                Log.w("TAG", "WebService call failed")
+                // Code here what happens if calling the WebServiceInterface fails
+                Log.w("TAG", "WebServiceInterface call failed")
             }
 
             override fun onResponse(call: Call<List<Game>>, response: Response<List<Game>>) {
@@ -63,7 +62,7 @@ class Index : Fragment() {
                     // We got our data !
                     val responseData = response.body()
                     if (responseData != null) {
-                        Log.d("TAG", "WebService success : " + responseData.size)
+                        Log.d("TAG", "WebServiceInterface success : " + responseData.size)
                     }
 
                     Log.d("RESULT",responseData.toString())
@@ -75,10 +74,13 @@ class Index : Fragment() {
                             image = image3
                         else if (i == 4)
                             image = image4
-                        val game : Game = (responseData as List<Game>).random()
+                        game = (responseData as List<Game>).random()
+                        while (list.contains(game))
+                            game = responseData.random()
+                        list.add(game)
                         Glide.with(view).load(game.picture).into(image)
                         image.setOnClickListener{
-                            (activity as MainActivity).onImageClick()
+                            (activity as MainActivity).onImageClick(game.id)
                         }
                     }
 

@@ -4,6 +4,14 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="game_info">Game Info</string>
-    <string name="game_info_short">Game Info</string>
     <string name="do_you_want_to_know_more">Do you want to know more ?</string>
+    <string name="nb_players">Nb Players :</string>
+    <string name="name">Name :</string>
+    <string name="type">Type :</string>
+    <string name="year">Year :</string>
+    <string name="todo">TODO</string>
+    <string name="name_value">TextView</string>
+    <string name="type_value">TextView</string>
+    <string name="nb_players_value">TextView</string>
+    <string name="year_value">TextView</string>
 </resources>
